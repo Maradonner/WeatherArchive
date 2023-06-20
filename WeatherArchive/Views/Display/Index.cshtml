@@ -1,0 +1,152 @@
+﻿@model DisplayViewModel<WeatherArchive.DAL.Entities.WeatherRecord>
+
+@{
+    ViewData["Title"] = "Weather Records";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+<form asp-action="Index" method="get">
+
+    <div class="form-group">
+        <label for="Month">Month</label>
+        <input type="number" id="Month" name="Month" class="form-control" value="@Model.WeatherResourceParameters.Month" min="1" max="12">
+    </div>
+
+    <div class="form-group">
+        <label for="Year">Year</label>
+        <input type="number" id="Year" name="Year" class="form-control" value="@Model.WeatherResourceParameters.Year">
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary mt-4">Filter</button>
+    </div>
+
+</form>
+
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Date/Time</th>
+        <th>Moscow Time</th>
+        <th>Temperature</th>
+        <th>Relative Humidity</th>
+        <th>Dew Point</th>
+        <th>Atmospheric Pressure</th>
+        <th>Wind Direction</th>
+        <th>Wind Velocity</th>
+        <th>Cloudiness</th>
+        <th>Cloudiness Lower Boundary</th>
+        <th>Horizontal Visibility</th>
+        <th>Weather Phenomena</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.PagedList)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.DateTime.ToString("yyyy-MM-dd")</td>
+            <td>@item.MoscowTime</td>
+            <td>@item.Temperature</td>
+            <td>@item.RelativeHumidity</td>
+            <td>@item.Td</td>
+            <td>@item.AtmosphericPressure</td>
+            <td>@item.WindDirection</td>
+            <td>@item.WindVelocity</td>
+            <td>@item.Cloudiness</td>
+            <td>@item.CloudinessLowerBoundary</td>
+            <td>@item.HorizontalVisibility</td>
+            <td>@item.WeatherPhenomena</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item @(Model.PagedList.CurrentPage == 1 ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-PageNumber="1"
+               asp-route-Month="@Model.WeatherResourceParameters.Month"
+               asp-route-Year="@Model.WeatherResourceParameters.Year"
+               asp-route-PageSize="@Model.PagedList.PageSize">
+                First
+            </a>
+        </li>
+
+        <li class="page-item @(Model.PagedList.HasPrevious ? "" : "disabled")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-PageNumber="@(Model.PagedList.CurrentPage - 1)"
+               asp-route-Month="@Model.WeatherResourceParameters.Month"
+               asp-route-Year="@Model.WeatherResourceParameters.Year"
+               asp-route-PageSize="@Model.PagedList.PageSize">
+                Previous
+            </a>
+        </li>
+
+        @if (Model.PagedList.TotalPages <= 6)
+        {
+            @for (var i = 1; i <= Model.PagedList.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PagedList.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-PageNumber="@i"
+                       asp-route-Month="@Model.WeatherResourceParameters.Month"
+                       asp-route-Year="@Model.WeatherResourceParameters.Year"
+                       asp-route-PageSize="@Model.PagedList.PageSize">
+                        @i
+                    </a>
+                </li>
+            }
+        }
+        else
+        {
+            var startPage = Model.PagedList.CurrentPage - 1 <= 3 ? 1 : Model.PagedList.TotalPages - Model.PagedList.CurrentPage <= 3 ? Model.PagedList.TotalPages - 5 : Model.PagedList.CurrentPage - 2;
+            var endPage = startPage + 5;
+
+            @for (var i = startPage; i <= endPage; i++)
+            {
+                <li class="page-item @(i == Model.PagedList.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-PageNumber="@i"
+                       asp-route-Month="@Model.WeatherResourceParameters.Month"
+                       asp-route-Year="@Model.WeatherResourceParameters.Year"
+                       asp-route-PageSize="@Model.PagedList.PageSize">
+                        @i
+                    </a>
+                </li>
+            }
+        }
+
+        <li class="page-item @(Model.PagedList.HasNext ? "" : "disabled")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-PageNumber="@(Model.PagedList.CurrentPage + 1)"
+               asp-route-Month="@Model.WeatherResourceParameters.Month"
+               asp-route-Year="@Model.WeatherResourceParameters.Year"
+               asp-route-PageSize="@Model.PagedList.PageSize">
+                Next
+            </a>
+        </li>
+
+        <li class="page-item @(Model.PagedList.CurrentPage == Model.PagedList.TotalPages ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-PageNumber="@Model.PagedList.TotalPages"
+               asp-route-Month="@Model.WeatherResourceParameters.Month"
+               asp-route-Year="@Model.WeatherResourceParameters.Year"
+               asp-route-PageSize="@Model.PagedList.PageSize">
+                Last
+            </a>
+        </li>
+    </ul>
+
+</nav>
