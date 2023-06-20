@@ -30,7 +30,7 @@ namespace WeatherArchive.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AtmosphericPressure")
+                    b.Property<int>("AtmosphericPressure")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Cloudiness")
@@ -48,22 +48,23 @@ namespace WeatherArchive.Migrations
                     b.Property<TimeSpan>("MoscowTime")
                         .HasColumnType("interval");
 
-                    b.Property<double?>("RelativeHumidity")
+                    b.Property<double>("RelativeHumidity")
                         .HasColumnType("double precision");
 
-                    b.Property<double?>("Td")
+                    b.Property<double>("Td")
                         .HasColumnType("double precision");
 
-                    b.Property<double?>("Temperature")
+                    b.Property<double>("Temperature")
                         .HasColumnType("double precision");
 
                     b.Property<string>("WeatherPhenomena")
                         .HasColumnType("text");
 
                     b.Property<string>("WindDirection")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<double?>("WindVelocity")
+                    b.Property<double>("WindVelocity")
                         .HasColumnType("double precision");
 
                     b.HasKey("Id");

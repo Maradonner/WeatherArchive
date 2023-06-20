@@ -38,7 +38,7 @@ public class UploadController : Controller
         {
             if (file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-                ModelState.AddModelError("", "File format is not valid. Only .xls, .xlsx formats are allowed.");
+                ModelState.AddModelError("", "File format is not valid. Only .xlsx formats are allowed.");
                 return View();
             }
         }
