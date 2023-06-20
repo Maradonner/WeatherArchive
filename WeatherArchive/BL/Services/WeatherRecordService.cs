@@ -27,6 +27,8 @@ public class WeatherRecordService : IWeatherRecordService
         if (parameters.Month != 0)
             query = query.Where(x => x.DateTime.Month == parameters.Month);
 
+        query = query.OrderBy(x => x.DateTime).ThenBy(x => x.MoscowTime);
+
         return await PagedList<WeatherRecord>.CreateAsync(query, parameters.PageNumber, parameters.PageSize, ct);
     }
 

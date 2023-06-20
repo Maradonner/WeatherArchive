@@ -1,4 +1,6 @@
-﻿namespace WeatherArchive.BL.ResourceParameters;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WeatherArchive.BL.ResourceParameters;
 
 public class WeatherResourceParameters
 {

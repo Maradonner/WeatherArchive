@@ -1,11 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Загрузка";
+    ViewData["Title"] = "Загрузка Файлов";
 }
+
+<h2>@ViewData["Title"]</h2>
 
 <form asp-action="Index" method="post" enctype="multipart/form-data">
 
     <p>
-        <input type="file" name="file" multiple accept=".xls, .xlsx"/>
+        <input type="file" name="file" multiple accept=".xlsx" />
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @Html.ValidationSummary()
+            </div>
+        }
     </p>
 
     <div class="form-group">

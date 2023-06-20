@@ -1,7 +1,7 @@
 ﻿@model DisplayViewModel<WeatherArchive.DAL.Entities.WeatherRecord>
 
 @{
-    ViewData["Title"] = "Weather Records";
+    ViewData["Title"] = "Архив погоды";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -10,8 +10,16 @@
 <form asp-action="Index" method="get">
 
     <div class="form-group">
-        <label for="Month">Month</label>
-        <input type="number" id="Month" name="Month" class="form-control" value="@Model.WeatherResourceParameters.Month" min="1" max="12">
+        <label asp-for="@Model.WeatherResourceParameters.Year" class="control-label"></label>
+        <select class="form-control" id="Month" name="Month">
+            <option value="0">Select Month DropDown</option>
+            @for (int month = 1; month <= 12; month++)
+            {
+                <option value="@month" selected="@(Model.WeatherResourceParameters.Month.Equals(month))">
+                    @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)
+                </option>
+            }
+        </select>
     </div>
 
     <div class="form-group">
@@ -25,48 +33,56 @@
 
 </form>
 
+@if (Model.PagedList.Count == 0)
+{
+    <div class="alert alert-warning">
+        <strong>Записи не найдены.</strong> Здесь можно загрузить данные.
+        <a class="btn btn-primary" asp-controller="Upload" asp-action="Index" role="button">Upload</a>
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date/Time</th>
+                <th>Moscow Time</th>
+                <th>Temperature</th>
+                <th>Relative Humidity</th>
+                <th>Dew Point</th>
+                <th>Atmospheric Pressure</th>
+                <th>Wind Direction</th>
+                <th>Wind Velocity</th>
+                <th>Cloudiness</th>
+                <th>Cloudiness Lower Boundary</th>
+                <th>Horizontal Visibility</th>
+                <th>Weather Phenomena</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PagedList)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.DateTime.ToString("yyyy-MM-dd")</td>
+                    <td>@item.MoscowTime</td>
+                    <td>@item.Temperature</td>
+                    <td>@item.RelativeHumidity</td>
+                    <td>@item.Td</td>
+                    <td>@item.AtmosphericPressure</td>
+                    <td>@item.WindDirection</td>
+                    <td>@item.WindVelocity</td>
+                    <td>@item.Cloudiness</td>
+                    <td>@item.CloudinessLowerBoundary</td>
+                    <td>@item.HorizontalVisibility</td>
+                    <td>@item.WeatherPhenomena</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Date/Time</th>
-        <th>Moscow Time</th>
-        <th>Temperature</th>
-        <th>Relative Humidity</th>
-        <th>Dew Point</th>
-        <th>Atmospheric Pressure</th>
-        <th>Wind Direction</th>
-        <th>Wind Velocity</th>
-        <th>Cloudiness</th>
-        <th>Cloudiness Lower Boundary</th>
-        <th>Horizontal Visibility</th>
-        <th>Weather Phenomena</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.PagedList)
-    {
-        <tr>
-            <td>@item.Id</td>
-            <td>@item.DateTime.ToString("yyyy-MM-dd")</td>
-            <td>@item.MoscowTime</td>
-            <td>@item.Temperature</td>
-            <td>@item.RelativeHumidity</td>
-            <td>@item.Td</td>
-            <td>@item.AtmosphericPressure</td>
-            <td>@item.WindDirection</td>
-            <td>@item.WindVelocity</td>
-            <td>@item.Cloudiness</td>
-            <td>@item.CloudinessLowerBoundary</td>
-            <td>@item.HorizontalVisibility</td>
-            <td>@item.WeatherPhenomena</td>
-        </tr>
-    }
-    </tbody>
-</table>
-
-<nav aria-label="Page navigation example">
+<nav aria-label="Page navigation">
     <ul class="pagination">
         <li class="page-item @(Model.PagedList.CurrentPage == 1 ? "disabled" : "")">
             <a class="page-link"
@@ -148,5 +164,5 @@
             </a>
         </li>
     </ul>
-
 </nav>
+}

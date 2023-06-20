@@ -26,7 +26,24 @@ public class UploadController : Controller
     [HttpPost]
     public async Task<ActionResult<UploadViewModel>> Index(CancellationToken ct)
     {
-        foreach (var file in Request.Form.Files)
+        var files = Request.Form.Files;
+
+        if (files.Count == 0)
+        {
+            ModelState.AddModelError("", "Please select at least one file.");
+            return View();
+        }
+
+        foreach (var file in files)
+        {
+            if (file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                ModelState.AddModelError("", "File format is not valid. Only .xls, .xlsx formats are allowed.");
+                return View();
+            }
+        }
+
+        foreach (var file in files)
         {
             if (file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 return BadRequest("Invalid file type. Please upload an Excel file.");
